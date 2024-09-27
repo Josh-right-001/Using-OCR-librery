@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Convert</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #upload-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #preview {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            min-height: 200px;
+            background-color: #fafafa;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="upload-container">
+        <h2>Upload an Image or PDF</h2>
+        <input type="file" id="fileInput" accept=".jpg, .jpeg, .png, .pdf"/>
+        <button id="convertBtn" disabled>Convert to Word/Excel</button>
+        <div id="preview" class="hidden"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.4/tesseract.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPDF/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.5.2/dist/html-docx.min.js"></script>
+    <script>
+const fileInput = document.getElementById('fileInput');
+const convertBtn = document.getElementById('convertBtn');
+const preview = document.getElementById('preview');
+
+fileInput.addEventListener('change', handleFileSelect);
+convertBtn.addEventListener('click', handleConversion);
+
+let fileData;
+
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const fileType = file.type;
+        if (fileType.startsWith('image/')) {
+            previewImage(file);
+            convertBtn.disabled = false;
+        } else if (fileType === 'application/pdf') {
+            previewPDF(file);
+            convertBtn.disabled = false;
+        } else {
+            alert('Please upload a valid image or PDF file.');
+            convertBtn.disabled = true;
+        }
+        fileData = file;
+    }
+}
+
+function previewImage(file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const img = document.createElement('img');
+        img.src = event.target.result;
+        img.style.maxWidth = '100%';
+        preview.innerHTML = '';
+        preview.appendChild(img);
+        preview.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+function previewPDF(file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const iframe = document.createElement('iframe');
+        iframe.src = event.target.result;
+        iframe.style.width = '100%';
+        iframe.style.height = '500px';
+        preview.innerHTML = '';
+        preview.appendChild(iframe);
+        preview.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+function handleConversion() {
+    if (fileData.type.startsWith('image/')) {
+        extractTextFromImage(fileData);
+    } else if (fileData.type === 'application/pdf') {
+        convertPDFToWord(fileData);
+    }
+}
+
+function extractTextFromImage(file) {
+    Tesseract.recognize(file, 'eng')
+        .then(result => {
+            const text = result.data.text;
+            preview.innerHTML = `<p>${text}</p>`;
+            downloadAsDocx(text);
+        })
+        .catch(error => console.error(error));
+}
+
+function downloadAsDocx(text) {
+    const content = `<html><body><p>${text.replace(/\n/g, '</p><p>')}</p></body></html>`;
+    const blob = htmlDocx.asBlob(content);
+    saveAs(blob, 'document.docx');
+}
+
+function convertPDFToWord(file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const pdf = new jsPDF();
+        pdf.html(event.target.result, {
+            callback: function (pdfDoc) {
+                pdfDoc.save('document.pdf');
+                convertPDFToWordFromHtml(event.target.result);
+            }
+        });
+    };
+    reader.readAsText(file);
+}
+
+function convertPDFToWordFromHtml(html) {
+    const content = `<html><body>${html}</body></html>`;
+    const blob = htmlDocx.asBlob(content);
+    saveAs(blob, 'document.docx');
+}
+
+    </script>
+</body>
+</html>

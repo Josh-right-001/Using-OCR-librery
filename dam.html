@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload & Extract</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
+
+.upload-container {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.preview-box {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    height: 150px;
+    overflow-y: auto;
+}
+
+.btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: not-allowed;
+    border-radius: 5px;
+}
+
+.btn:enabled {
+    cursor: pointer;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.popup-btn {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="upload-container">
+        <h2>Upload an Image or PDF</h2>
+        <input type="file" id="fileInput" accept=".pdf, image/*">
+        <div id="preview" class="preview-box"></div>
+
+        <button id="downloadButton" class="btn" disabled>Download</button>
+    </div>
+
+    <!-- Popup for format selection -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <h3>Select File Format</h3>
+            <button class="popup-btn" onclick="downloadFile('word')">Word</button>
+            <button class="popup-btn" onclick="downloadFile('excel')">Excel</button>
+            <button class="popup-btn" onclick="downloadFile('txt')">Text</button>
+        </div>
+    </div>
+
+    <script>
+document.getElementById("fileInput").addEventListener("change", handleFileUpload);
+const previewBox = document.getElementById("preview");
+const downloadButton = document.getElementById("downloadButton");
+const popup = document.getElementById("popup");
+
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const fileType = file.type;
+
+    if (fileType.includes('image')) {
+        // Handle image file
+        extractTextFromImage(file);
+    } else if (fileType === 'application/pdf') {
+        // Handle PDF file
+        previewPDF(file);
+    }
+}
+
+function extractTextFromImage(file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        // Simulating text extraction from the image
+        const imageText = "Extracted text from the image would appear here.";
+        previewBox.innerText = imageText;
+
+        // Enable download button
+        enableDownload();
+    };
+    reader.readAsDataURL(file);
+}
+
+function previewPDF(file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        // Simulating PDF preview and extraction
+        const pdfText = "Extracted text and tables from the PDF would appear here.";
+        previewBox.innerText = pdfText;
+
+        // Enable download button
+        enableDownload();
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function enableDownload() {
+    downloadButton.disabled = false;
+    downloadButton.addEventListener("click", function() {
+        popup.style.display = "flex"; // Show popup to select format
+    });
+}
+
+function downloadFile(format) {
+    // Simulate downloading the extracted data in chosen format
+    let extractedContent = previewBox.innerText;
+
+    let fileContent;
+    let fileName;
+
+    if (format === 'word') {
+        fileContent = `Word document content:\n\n${extractedContent}`;
+        fileName = 'document.docx';
+    } else if (format === 'excel') {
+        fileContent = `Excel table content:\n\n${extractedContent}`;
+        fileName = 'document.xlsx';
+    } else {
+        fileContent = extractedContent;
+        fileName = 'document.txt';
+    }
+
+    const blob = new Blob([fileContent], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    popup.style.display = "none"; // Hide the popup after download
+}
+
+    </script>
+</body>
+</html>

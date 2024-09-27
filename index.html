@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ceni App - Authentication</title>
+    <link rel="stylesheet" href="./font/css/all.min.css">
+    <link rel="stylesheet" href="./font/css/all.css">
+    <link rel="stylesheet" href="./font/js/all.js">
+    <link rel="stylesheet" href="./font/js/all.min.js">
+    <link rel="shortcut icon" href="./client/img/drc-logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="client/css/index.css">
+</head>
+<style>
+/* Error Pop-up Styles */
+#error-popup {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+    border: 1px solid #ff000080;
+    padding: 20px 40px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    color: #ff0000;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.5s ease;
+    z-index: 1001;
+    max-width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Hidden state */
+#error-popup.hidden {
+    display: none;
+}
+
+/* Error pop-up close action */
+#error-popup:hover {
+    cursor: pointer;
+}
+
+</style>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="dol">
+            <div class="spinner"></div>
+                <div class="spin-box"></div>
+            </div>            
+            <img src="./client/img/flag-2386834_640.jpg" alt="Logo" class="preload-logo">
+            <p class="loading-text">Loading<span class="flash">...</span></p>
+        </div>
+    </div>
+
+    <!-- Authentication Form -->
+    <div id="auth-section" class="hidden">
+        <div class="auth-box">
+            <!-- Registration Form -->
+            <div id="register-box">
+                <h2>S'inscrire</h2>
+                <form id="register-form">
+                    <input type="text" placeholder="Nom" name="nom" required>
+                    <input type="text" placeholder="Poste-nom" name="poste" required>
+                    <input type="number" placeholder="Matricule" name="matricule" required>
+                    <input type="email" placeholder="Email" name="email" required>
+                    <input type="password" placeholder="Mot de passe" name="password" required>
+                    <input type="password" placeholder="Répéter le mot de passe" name="password-confirm" required>
+                    <label class="checkbox"><input class="checkboxS" type="checkbox" name="remember"> Se souvenir de moi</label>
+                    <button type="button" id="google-login"><i class="fab fa-google"></i> Se connecter avec Google</button>
+                    <button type="submit"><i class="fas fa-paper-plane"></i> Submit</button>
+                </form>
+                <p>Si vous avez un compte, veuillez vous <a id="switch-to-login">connecter</a></p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-box" class="hidden">
+                <h2>Se connecter</h2>
+                <form id="login-form">
+                    <input type="text" placeholder="Nom" name="nom" required>
+                    <input type="number" placeholder="Matricule" name="matricule" required>
+                    <input type="password" placeholder="Mot de passe" name="password" required>
+                    <button type="button" id="google-login-login"><i class="fab fa-google"></i> Se connecter avec Google</button>
+                    <button type="submit"><i class="fas fa-paper-plane"></i> Se connecter</button>
+                </form>
+                <p>Si vous n'avez pas de compte, veuillez en <a id="switch-to-register">créer</a></p>
+                <div id="error-popup" class="hidden"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="client/js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application en cours de création</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+        /* ajout de styles pour les effets d'animation */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0; /* ajout d'un fond de page */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px; /* ajout de coins arrondis */
+        }
+
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333; /* ajout d'une couleur de texte */
+            background: linear-gradient(to right, #ff69b4, #ff99ff); /* ajout d'un gradient de couleur */
+            -webkit-background-clip: text; /* pour que le gradient de couleur soit appliqué au texte */
+            -webkit-text-fill-color: transparent; /* pour que le texte soit transparent */
+        }
+
+        .animation {
+            display: none;
+        }
+
+        /* animation de timeout */
+        #timeout-animation {
+            animation: timeout 2s ease-in-out;
+        }
+
+        @keyframes timeout {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* ajout d'effets d'animation de couleurs */
+        #text {
+            animation: color-change 5s infinite;
+        }
+
+        @keyframes color-change {
+            0% {
+                color: #333;
+            }
+            25% {
+                color: #666;
+            }
+            50% {
+                color: #999;
+            }
+            75% {
+                color: #ccc;
+            }
+            100% {
+                color: #333;
+            }
+        }
+
+        /* ajout d'images importées en ligne */
+        .image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 20px;
+        }
+
+        /* ajout de bulles en couleur d'animation gradient */
+        .bulles {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #ff69b4, #ff99ff);
+            animation: bulle 2s infinite;
+        }
+
+        @keyframes bulle {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* ajout de background sombre la nuit */
+        .background-sombre {
+            background-color: #333;
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        /* ajout de background clair le jour */
+        .background-clair {
+            background-color: #f0f0f0;
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        .bulles {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(to top, #ff69b4, #ff99ff);
+    animation: bulle 2s infinite;
+}
+
+.al {
+    background: linear-gradient(to top, #ff69b4, #ff99ff);
+    animation-delay: 0s;
+}
+
+.bl {
+    background: linear-gradient(to top, #33ccff, #66ffff);
+    animation-delay: 0.5s;
+}
+
+.cl {
+    background: linear-gradient(to top, #ffcc00, #ffff00);
+    animation-delay: 1s;
+}
+
+.df {
+    background: linear-gradient(to top, #66ffcc, #99ffcc);
+    animation-delay: 1.5s;
+}
+
+.er {
+    background: linear-gradient(to top, #ccff66, #ffff66);
+    animation-delay: 2s;
+}
+
+@keyframes bulle {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-100px) scale(1.2);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-200px) scale(1);
+        opacity: 0;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="text">Hello sir Lebon, Votre application est en cours de création et sera hébergée ici.</h1>
+        <h1 id="text">ce <a style="text-decoration: none;" href="https://wa.me/+243974156933">Josh right</a> qui traite le soucis.</h1>
+        <div class="timer">
+            <div id="world-time" class="timer"></div> <!-- ajout d'un élément pour afficher l'heure universelle -->
+            <span id="time">39:15:30</span>
+        </div>
+        <div class="animation" id="timeout-animation">
+            <!-- animation de timeout ici -->
+            <img src="https://picsum.photos/200/300" alt="image" class="image"> <!-- ajout d'une image importée en ligne -->
+        </div>
+        <div class="bulles al"></div> <!-- ajout de bulles en couleur d'animation gradient -->
+        <div class="bulles bl"></div> <!-- ajout de bulles en couleur d'animation gradient -->
+        <div class="bulles cl"></div> <!-- ajout de bulles en couleur d'animation gradient -->
+        <div class="bulles df"></div> <!-- ajout de bulles en couleur d'animation gradient -->
+        <div class="bulles er"></div> <!-- ajout de bulles en couleur d'animation gradient -->
+    </div>
+
+    <script>
+        const timerElement = document.getElementById('time');
+        const worldTimeElement = document.getElementById('world-time');
+        const timeoutAnimationElement = document.getElementById('timeout-animation');
+
+        let time = '39:15:30';
+        let timeArray = time.split(':');
+        let seconds = parseInt(timeArray[2], 10);
+        let minutes = parseInt(timeArray[1], 10);
+        let hours = parseInt(timeArray[0], 10);
+
+        function countdown() {
+            seconds--;
+            if (seconds < 0) {
+                minutes--;
+                seconds = 59;
+            }
+            if (minutes < 0) {
+                hours--;
+                minutes = 59;
+            }
+            if (hours < 0) {
+                // temps écoulé, afficher l'animation de timeout
+                timeoutAnimationElement.style.display = 'block';
+                return;
+            }
+            timerElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            setTimeout(countdown, 1000);
+        }
+
+        countdown();
+
+        // appel à l'API World Time pour afficher l'heure universelle
+        fetch('http://worldtimeapi.org/api/timezone/Europe/Paris')
+            .then(response => response.json())
+            .then(data => {
+                const currentTime = data.current_time;
+                worldTimeElement.textContent = currentTime;
+            })
+            .catch(error => console.error(error));
+    </script>
+</body>
+</html>
